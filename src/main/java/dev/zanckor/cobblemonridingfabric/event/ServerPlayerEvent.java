@@ -19,7 +19,21 @@ public class ServerPlayerEvent {
 
     public static void playerJoin() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            SendPacket.TO_CLIENT(handler.player, new ConfigS2CPacket(loadConfig()));
+            PokemonJsonObject config = loadConfig();
+            if (config != null) {
+                String json = new Gson().toJson(config);
+
+                int max = 32000; // Maximum chunk size
+                int total = (int) Math.ceil((double) json.length() / max);
+
+                for (int i = 0; i < total; i++) {
+                    int start = i * max;
+                    int end = Math.min(start + max, json.length());
+                    String chunk = json.substring(start, end);
+
+                    SendPacket.TO_CLIENT(handler.player, new ConfigS2CPacket(chunk, i, total));
+                }
+            }
         });
     }
 

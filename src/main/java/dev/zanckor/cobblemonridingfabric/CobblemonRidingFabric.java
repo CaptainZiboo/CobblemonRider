@@ -21,6 +21,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import static dev.zanckor.cobblemonridingfabric.config.PokemonJsonObject.MountType.*;
 
@@ -28,7 +30,31 @@ public class CobblemonRidingFabric implements ModInitializer {
     public static final String MODID = "cobblemonridingfabric";
     public static final org.slf4j.Logger LOGGER = LogUtils.getLogger();
     public static File PokemonRideConfigFile;
+    
+    private static final Map<Integer, String> chunks = new TreeMap<>();
+    private static int totalChunks = 0;
+
     public static PokemonJsonObject pokemonJsonObject;
+
+    public static void addConfigChunk(int index, String chunk, int total) {
+        chunks.put(index, chunk);
+        totalChunks = total;
+
+        if (chunks.size() == totalChunks) {
+            // Rebuild configuration json from chunks
+            StringBuilder fullConfig = new StringBuilder();
+            for (int i = 0; i < totalChunks; i++) {
+                fullConfig.append(chunks.get(i));
+            }
+
+            // Convert json to config object
+            pokemonJsonObject = new Gson().fromJson(fullConfig.toString(), PokemonJsonObject.class);
+
+            // Reset chunks
+            chunks.clear();
+            totalChunks = 0;
+        }
+    }
 
 
     @Override

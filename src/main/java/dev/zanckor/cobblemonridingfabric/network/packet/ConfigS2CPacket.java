@@ -13,17 +13,22 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.util.Identifier;
 
 public class ConfigS2CPacket extends AbstractPacket {
-    private final PokemonJsonObject jsonObject;
+    private final String chunk;
+    private final int index;
+    private final int total;
 
-    public ConfigS2CPacket(PokemonJsonObject json) {
-        this.jsonObject = json;
+    public ConfigS2CPacket(String chunk, int index, int total) {
+        this.chunk = chunk;
+        this.index = index;
+        this.total = total;
     }
 
     @Override
     public PacketByteBuf encode() {
         PacketByteBuf buf = PacketByteBufs.create();
-        buf.writeString(new Gson().toJson(this.jsonObject));
-
+        buf.writeInt(index);
+        buf.writeInt(total);
+        buf.writeString(chunk);
         return buf;
     }
 
@@ -33,6 +38,12 @@ public class ConfigS2CPacket extends AbstractPacket {
     }
 
     public static void receive(MinecraftClient client, ClientPlayPacketListener handler, PacketByteBuf buffer, PacketSender responseSender) {
-        CobblemonRidingFabric.pokemonJsonObject = new Gson().fromJson(buffer.readString(), PokemonJsonObject.class);
+        int index = buffer.readInt();
+        int total = buffer.readInt();
+        String chunk = buffer.readString();
+
+        client.execute(() -> {
+            CobblemonRidingFabric.addConfigChunk(index, chunk, total);
+        });
     }
 }
