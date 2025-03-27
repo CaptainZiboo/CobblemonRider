@@ -123,9 +123,18 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
     @Override
     protected void updatePassengerPosition(Entity entity, PositionUpdater moveFunction) {
         if (this.hasPassenger(entity) && getPassengerObject() != null && getControllingPassenger() != null) {
+            boolean isMoving = this.getVelocity().lengthSquared() > 0.001;
             int passengerIndex = getPassengerList().indexOf(entity) - 1;
             boolean isControllingPassenger = getControllingPassenger().equals(entity);
-            ArrayList<Float> offSet = isControllingPassenger ? getPassengerObject().getRidingOffSet() : getPassengerObject().getPassengersOffSet().get(passengerIndex);
+            ArrayList<Float> offSet = 
+                isControllingPassenger 
+                ? (isMoving 
+                    ? getPassengerObject().getMovingRidingOffSet() 
+                    : getPassengerObject().getRidingOffSet()) 
+                : (isMoving
+                    ? getPassengerObject().getMovingPassengersOffSet().get(passengerIndex) 
+                    : getPassengerObject().getPassengersOffSet().get(passengerIndex)
+                );
 
             setBodyYaw(getControllingPassenger().getBodyYaw());
 
