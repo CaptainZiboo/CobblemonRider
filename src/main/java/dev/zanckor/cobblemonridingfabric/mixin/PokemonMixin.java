@@ -301,7 +301,7 @@ public abstract class PokemonMixin extends PathAwareEntity implements Poseable, 
 
     @Inject(method = "handleFallDamage", at = @At("HEAD"), cancellable = true)
     public void causeFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (getControllingPassenger() != null && fallDistance > 4) {
+        if (getControllingPassenger() != null && fallDistance < 7) {
             cir.setReturnValue(false);
         }
     }

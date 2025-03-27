@@ -95,6 +95,14 @@ java {
 }
 
 jar {
+	dependsOn processResources
+
+	from {
+		sourceSets.main.resources.srcDirs
+	}
+
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
 	from("LICENSE") {
 		rename { "${it}_${project.base.archivesName.get()}"}
 	}
