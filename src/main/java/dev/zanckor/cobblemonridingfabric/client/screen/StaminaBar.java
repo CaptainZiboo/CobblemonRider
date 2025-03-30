@@ -21,8 +21,7 @@ public class StaminaBar implements HudRenderCallback {
     public void onHudRender(DrawContext drawContext, float tickDelta) {
         PlayerEntity player = MinecraftClient.getInstance().player;
 
-
-        if(player != null && player.getVehicle() instanceof PokemonEntity pokemon) {
+        if (player != null && player.getVehicle() instanceof PokemonEntity pokemon) {
             MatrixStack poseStack = drawContext.getMatrices();
             float width = MinecraftClient.getInstance().getWindow().getScaledWidth();
             float height = MinecraftClient.getInstance().getWindow().getScaledHeight();
@@ -32,7 +31,7 @@ public class StaminaBar implements HudRenderCallback {
             float percentage = (maxStamina - stamina) / maxStamina;
 
             int xPos = (int) ((width / 2) - (BAR_WIDTH / 2));
-            int yPos = (int) (height - 29);
+            int yPos = (int) (height - 31);
 
             poseStack.push();
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
@@ -42,7 +41,8 @@ public class StaminaBar implements HudRenderCallback {
                     0, BAR_HEIGHT / 2, (int) BAR_WIDTH, (int) BAR_HEIGHT / 2, (int) BAR_WIDTH, (int) BAR_HEIGHT);
 
             drawContext.drawTexture(BAR, xPos, yPos,
-                    0, BAR_HEIGHT, (int) (BAR_WIDTH * percentage), (int) BAR_HEIGHT / 2, (int) BAR_WIDTH, (int) BAR_HEIGHT);
+                    0, BAR_HEIGHT, (int) (BAR_WIDTH * percentage), (int) BAR_HEIGHT / 2, (int) BAR_WIDTH,
+                    (int) BAR_HEIGHT);
 
             poseStack.pop();
         }

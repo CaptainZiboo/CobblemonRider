@@ -2,6 +2,8 @@ package dev.zanckor.cobblemonridingfabric.config;
 
 import java.util.*;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PokemonJsonObject {
 
     Boolean mustAllowEntityRiding = false;
@@ -15,39 +17,203 @@ public class PokemonJsonObject {
     }
 
     public boolean mustAllowEntityRiding() {
-        return mustAllowEntityRiding == null ? false : mustAllowEntityRiding;
+        return mustAllowEntityRiding != null && mustAllowEntityRiding;
+    }
+
+    public static class OffsetData {
+        @SerializedName("default")
+        ArrayList<Float> base = new ArrayList<>(List.of(0.0f, 0.0f, 0.0f));
+
+        @SerializedName("moving")
+        ArrayList<Float> moving;
+
+        @SerializedName("flying")
+        ArrayList<Float> flying;
+
+        @SerializedName("flying:moving")
+        ArrayList<Float> flyingMoving;
+
+        @SerializedName("flying:idle")
+        ArrayList<Float> flyingIdle;
+
+        @SerializedName("swimming")
+        ArrayList<Float> swimming;
+
+        @SerializedName("swimming:moving")
+        ArrayList<Float> swimmingMoving;
+
+        @SerializedName("swimming:idle")
+        ArrayList<Float> swimmingIdle;
+
+        @SerializedName("swimming:lava")
+        ArrayList<Float> swimmingLava;
+
+        @SerializedName("swimming:lava:moving")
+        ArrayList<Float> swimmingLavaMoving;
+
+        @SerializedName("swimming:lava:idle")
+        ArrayList<Float> swimmingLavaIdle;
+
+        public OffsetData() {
+        }
+
+        public OffsetData(ArrayList<Float> base) {
+            this.base = base;
+        }
+
+        public ArrayList<Float> getDefault() {
+            return base;
+        }
+
+        public ArrayList<Float> getMoving() {
+            return moving != null ? moving : base;
+        }
+
+        public ArrayList<Float> getFlying() {
+            return flying != null ? flying : base;
+        }
+
+        public ArrayList<Float> getFlyingMoving() {
+            return flyingMoving != null ? flyingMoving : getFlying();
+        }
+
+        public ArrayList<Float> getFlyingIdle() {
+            return flyingIdle != null ? flyingIdle : getFlying();
+        }
+
+        public ArrayList<Float> getSwimming() {
+            return swimming != null ? swimming : base;
+        }
+
+        public ArrayList<Float> getSwimmingMoving() {
+            return swimmingMoving != null ? swimmingMoving : getSwimming();
+        }
+
+        public ArrayList<Float> getSwimmingIdle() {
+            return swimmingIdle != null ? swimmingIdle : getSwimming();
+        }
+
+        public ArrayList<Float> getSwimmingLava() {
+            return swimmingLava != null ? swimmingLava : base;
+        }
+
+        public ArrayList<Float> getSwimmingLavaMoving() {
+            return swimmingLavaMoving != null ? swimmingLavaMoving : getSwimmingLava();
+        }
+
+        public ArrayList<Float> getSwimmingLavaIdle() {
+            return swimmingLavaIdle != null ? swimmingLavaIdle : getSwimmingLava();
+        }
+    }
+
+    public static class PassengerOffsetData {
+        @SerializedName("default")
+        ArrayList<ArrayList<Float>> base = new ArrayList<>();
+
+        @SerializedName("moving")
+        ArrayList<ArrayList<Float>> moving;
+
+        @SerializedName("flying")
+        ArrayList<ArrayList<Float>> flying;
+
+        @SerializedName("flying:moving")
+        ArrayList<ArrayList<Float>> flyingMoving;
+
+        @SerializedName("flying:idle")
+        ArrayList<ArrayList<Float>> flyingIdle;
+
+        @SerializedName("swimming")
+        ArrayList<ArrayList<Float>> swimming;
+
+        @SerializedName("swimming:moving")
+        ArrayList<ArrayList<Float>> swimmingMoving;
+
+        @SerializedName("swimming:idle")
+        ArrayList<ArrayList<Float>> swimmingIdle;
+
+        @SerializedName("swimming:lava")
+        ArrayList<ArrayList<Float>> swimmingLava;
+
+        @SerializedName("swimming:lava:moving")
+        ArrayList<ArrayList<Float>> swimmingLavaMoving;
+
+        @SerializedName("swimming:lava:idle")
+        ArrayList<ArrayList<Float>> swimmingLavaIdle;
+
+        public PassengerOffsetData() {
+        }
+
+        public PassengerOffsetData(ArrayList<ArrayList<Float>> base) {
+            this.base = base;
+        }
+
+        public ArrayList<ArrayList<Float>> getDefault() {
+            return base;
+        }
+
+        public ArrayList<ArrayList<Float>> getMoving() {
+            return moving != null ? moving : base;
+        }
+
+        public ArrayList<ArrayList<Float>> getFlying() {
+            return flying != null ? flying : base;
+        }
+
+        public ArrayList<ArrayList<Float>> getFlyingMoving() {
+            return flyingMoving != null ? flyingMoving : getFlying();
+        }
+
+        public ArrayList<ArrayList<Float>> getFlyingIdle() {
+            return flyingIdle != null ? flyingIdle : getFlying();
+        }
+
+        public ArrayList<ArrayList<Float>> getSwimming() {
+            return swimming != null ? swimming : base;
+        }
+
+        public ArrayList<ArrayList<Float>> getSwimmingMoving() {
+            return swimmingMoving != null ? swimmingMoving : getSwimming();
+        }
+
+        public ArrayList<ArrayList<Float>> getSwimmingIdle() {
+            return swimmingIdle != null ? swimmingIdle : getSwimming();
+        }
+
+        public ArrayList<ArrayList<Float>> getSwimmingLava() {
+            return swimmingLava != null ? swimmingLava : base;
+        }
+
+        public ArrayList<ArrayList<Float>> getSwimmingLavaMoving() {
+            return swimmingLavaMoving != null ? swimmingLavaMoving : getSwimmingLava();
+        }
+
+        public ArrayList<ArrayList<Float>> getSwimmingLavaIdle() {
+            return swimmingLavaIdle != null ? swimmingLavaIdle : getSwimmingLava();
+        }
+
     }
 
     public static class PokemonConfigData {
         String formName;
         int stamina;
         ArrayList<MountType> mountType;
-        ArrayList<Float> ridingOffSet;
-        ArrayList<Float> movingRidingOffSet;
-        ArrayList<ArrayList<Float>> passengersOffSet;
-        ArrayList<ArrayList<Float>> movingPassengersOffSet;
-
+        OffsetData ridingOffset = new OffsetData();
+        PassengerOffsetData passengersOffset = new PassengerOffsetData();
         float speedModifier = 1;
 
-        public PokemonConfigData(ArrayList<MountType> mountType, ArrayList<Float> offSet, ArrayList<ArrayList<Float>> passengersOffset, ArrayList<Float> movingOffSet, ArrayList<ArrayList<Float>> movingPassengersOffset) {
+        public PokemonConfigData(ArrayList<MountType> mountType, OffsetData ridingOffset,
+                PassengerOffsetData passengersOffset) {
             this.mountType = mountType;
-            this.ridingOffSet = offSet;
-            this.passengersOffSet = passengersOffset;
-            this.movingRidingOffSet = movingOffSet;
-            this.movingPassengersOffSet = movingPassengersOffset;
+            this.ridingOffset = ridingOffset;
+            this.passengersOffset = passengersOffset;
         }
 
-        public PokemonConfigData(ArrayList<MountType> mountType, ArrayList<Float> offSet, ArrayList<ArrayList<Float>> passengersOffset) {
-            this(mountType, offSet, passengersOffset, null, null);
-        }
-
-        public PokemonConfigData(ArrayList<MountType> mountType, ArrayList<Float> offSet) {
-            this(mountType, offSet, new ArrayList<>(), null, null);
-            passengersOffSet.add(new ArrayList<>(List.of(0.0f, 0.0f, 0.0f)));
+        public PokemonConfigData(ArrayList<MountType> mountType, OffsetData ridingOffset) {
+            this(mountType, ridingOffset, new PassengerOffsetData());
         }
 
         public PokemonConfigData(ArrayList<MountType> mountType) {
-            this(mountType, new ArrayList<>(List.of(0.0f, 0.0f, 0.0f)), new ArrayList<>(), null, null);
+            this(mountType, new OffsetData(), new PassengerOffsetData());
         }
 
         public PokemonConfigData() {
@@ -66,35 +232,16 @@ public class PokemonJsonObject {
             return mountType;
         }
 
-        public ArrayList<Float> getRidingOffSet() {
-            return ridingOffSet;
+        public OffsetData getRidingOffset() {
+            return ridingOffset;
         }
 
-       
-        public ArrayList<Float> getMovingRidingOffSet() {
-            return (movingRidingOffSet != null) ? movingRidingOffSet : getRidingOffSet();
+        public PassengerOffsetData getPassengersOffset() {
+            return passengersOffset;
         }
 
         public float getSpeedModifier() {
             return speedModifier;
-        }
-
-        public ArrayList<Float> getPassengerOffSet(int passenger) {
-            return (passenger >= 0 && passenger < passengersOffSet.size()) ? passengersOffSet.get(passenger) : new ArrayList<>(List.of(0.0f, 0.0f, 0.0f));
-        }
-
-        public ArrayList<ArrayList<Float>> getPassengersOffSet() {
-            return passengersOffSet;
-        }
-
-        public ArrayList<Float> getMovingPassengerOffSet(int passenger) {
-            return (movingPassengersOffSet != null && passenger >= 0 && passenger < movingPassengersOffSet.size())
-                    ? movingPassengersOffSet.get(passenger)
-                    : getPassengerOffSet(passenger);
-        }
-
-        public ArrayList<ArrayList<Float>> getMovingPassengersOffSet() {
-            return movingPassengersOffSet != null ? movingPassengersOffSet : passengersOffSet;
         }
     }
 

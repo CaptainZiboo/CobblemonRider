@@ -11,6 +11,8 @@ import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.util.ActionResult;
 
+import static dev.zanckor.cobblemonridingfabric.CobblemonRidingFabric.LOGGER;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -20,6 +22,10 @@ public class ServerPlayerEvent {
     public static void playerJoin() {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             PokemonJsonObject config = loadConfig();
+
+            LOGGER.info("[RIDE] Sending config to player " + handler.player.getName().getString());
+            LOGGER.info("[RIDE] Config: " + config);
+
             if (config != null) {
                 String json = new Gson().toJson(config);
 
@@ -41,14 +47,22 @@ public class ServerPlayerEvent {
         File pokemonRideConfigFile = CobblemonRidingFabric.PokemonRideConfigFile;
         String pokemonRideConfig = null;
 
+        LOGGER.info("[RIDE] Loading cobblemon pokemon ride config file" + pokemonRideConfigFile);
+
         try {
-            if (pokemonRideConfigFile != null)
+            if (pokemonRideConfigFile != null) {
+                LOGGER.info("[RIDE] Pokemon ride config file exists" + pokemonRideConfigFile);
                 pokemonRideConfig = new String(Files.readAllBytes(pokemonRideConfigFile.toPath()));
+                LOGGER.info("[RIDE] Pokemon ride config loaded" + pokemonRideConfig);
+            }
         } catch (IOException e) {
-            CobblemonRidingFabric.LOGGER.info("Error reading cobblemon pokemon ride config file" + pokemonRideConfigFile);
+            CobblemonRidingFabric.LOGGER
+                    .info("Error reading cobblemon pokemon ride config file" + pokemonRideConfigFile);
 
             return null;
         }
+
+        LOGGER.info("[RIDE] Pokemon ride config: " + pokemonRideConfig);
 
         return pokemonRideConfig != null ? new Gson().fromJson(pokemonRideConfig, PokemonJsonObject.class) : null;
     }
